@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 
 
 const NoteApp = () => {
-  const [ notes, setNotes ] = useState( [] );
+  const notesData = JSON.parse( window.localStorage.getItem( 'notes' ) )
+  const [ notes, setNotes ] = useState( notesData || [] );
   const [ title, setTitle ] = useState( '' );
   const [ body, setBody ] = useState( '' );
+
+  useEffect( () => {
+    window.localStorage.setItem( 'notes', JSON.stringify( notes ) )
+  } )
 
   const addNote = ( e ) => {
     e.preventDefault();
@@ -46,6 +51,11 @@ const NoteApp = () => {
 //   const [ count, setCount ] = useState( props.count );
 //   const [ text, setText ] = useState( '' );
 
+//   useEffect( () => {
+//     console.log( 'use effect ran' );
+//     document.title = count;
+//   } )
+
 //   return (
 //     <div>
 //       <p>The current { text || 'count' } is { count }</p>
@@ -62,6 +72,7 @@ const NoteApp = () => {
 // }
 
 ReactDOM.render( <NoteApp />, document.getElementById( 'root' ) );
+// ReactDOM.render( <App count={ 0 } />, document.getElementById( 'root' ) );
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
