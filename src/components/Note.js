@@ -10,7 +10,7 @@ const Note = ( { note } ) => {
     <div>
       <h3>{ note.title }</h3>
       <p>{ note.body }</p>
-      <p>{ position.x }, { position.y }</p>
+      <p>{ position.x } - { position.y }</p>
       <button onClick={ () => dispatch( { type: 'REMOVE_NOTE', title: note.title } ) }>X</button>
     </div>
   )
