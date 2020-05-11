@@ -4,14 +4,20 @@ import * as serviceWorker from './serviceWorker';
 
 
 const NoteApp = () => {
-  const notesData = JSON.parse( window.localStorage.getItem( 'notes' ) )
-  const [ notes, setNotes ] = useState( notesData || [] );
+  const [ notes, setNotes ] = useState( [] );
   const [ title, setTitle ] = useState( '' );
   const [ body, setBody ] = useState( '' );
 
   useEffect( () => {
+    const notesData = JSON.parse( window.localStorage.getItem( 'notes' ) )
+    if ( notesData ) {
+      setNotes( notesData )
+    }
+  }, [] )
+
+  useEffect( () => {
     window.localStorage.setItem( 'notes', JSON.stringify( notes ) )
-  } )
+  }, [ notes ] )
 
   const addNote = ( e ) => {
     e.preventDefault();
@@ -31,11 +37,7 @@ const NoteApp = () => {
     <div>
       <h1>Notes</h1>
       { notes.map( ( note ) => (
-        <div key={ note.title }>
-          <h3>{ note.title }</h3>
-          <p>{ note.body }</p>
-          <button onClick={ () => removeNote( note.title ) }>X</button>
-        </div>
+        <Note key={ note.title } note={ note } removeNote={ removeNote } />
       ) ) }
       <p>Add note</p>
       <form onSubmit={ addNote }>
@@ -47,32 +49,27 @@ const NoteApp = () => {
   )
 }
 
-// const App = ( props ) => {
-//   const [ count, setCount ] = useState( props.count );
-//   const [ text, setText ] = useState( '' );
+const Note = ( { note, removeNote } ) => {
+  useEffect( () => {
+    console.log( 'setting up effect!' );
 
-//   useEffect( () => {
-//     console.log( 'use effect ran' );
-//     document.title = count;
-//   } )
+    return () => {
+      console.log( 'Cleaning up effect!' )
+    }
+  }, [] )
 
-//   return (
-//     <div>
-//       <p>The current { text || 'count' } is { count }</p>
-//       <button onClick={ () => { setCount( count + 1 ) } }>+1</button>
-//       <button onClick={ () => { setCount( props.count ) } }>Reset</button>
-//       <button onClick={ () => { setCount( count - 1 ) } }>-1</button>
-//       <input value={ text } onChange={ ( e ) => { setText( e.target.value ) } } />
-//     </div>
-//   )
-// }
+  return (
+    <div>
+      <h3>{ note.title }</h3>
+      <p>{ note.body }</p>
+      <button onClick={ () => removeNote( note.title ) }>X</button>
+    </div>
+  )
 
-// App.defaultProps = {
-//   count: 0
-// }
+}
+
 
 ReactDOM.render( <NoteApp />, document.getElementById( 'root' ) );
-// ReactDOM.render( <App count={ 0 } />, document.getElementById( 'root' ) );
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
